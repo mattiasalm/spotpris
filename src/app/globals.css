@@ -1,0 +1,61 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground: #1a261a;
+  --background: #91d392;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground: #91d392;
+    --background: #1a261a;
+  }
+}
+
+body {
+  overscroll-behavior: none;
+  color: var(--foreground);
+  background: var(--background);
+}
+
+@layer base {
+  body {
+    @apply h-screen;
+  }
+}
+
+.apexcharts-series-markers-wrap .apexcharts-marker {
+  fill: darkorange;
+  transition: none;
+}
+
+.apexcharts-line {
+  stroke: orange;
+  stroke-width: 2;
+}
+
+.apexcharts-xaxis-annotations * {
+  stroke: magenta;
+}
+
+.apexcharts-gridlines-horizontal *,
+.apexcharts-grid-borders * {
+  stroke-width: 1;
+  opacity: 0.5;
+  stroke: red;
+}
+.apexcharts-grid-borders > line:last-child {
+  opacity: 0;
+}
+
+.apexcharts-xcrosshairs {
+  stroke: cyan;
+}
+
+.apexcharts-xaxis-label,
+.apexcharts-yaxis-label {
+  fill: palegoldenrod;
+  font-size: 1rem;
+}
