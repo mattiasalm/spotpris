@@ -1,9 +1,6 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
 import './globals.css';
 import { FC, PropsWithChildren } from 'react';
-
-const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'Spotpris',
@@ -19,7 +16,7 @@ const RootLayout: FC<PropsWithChildren> = ({ children }) => {
           content="width=device-width,initial-scale=1,viewport-fit=cover"
         />
       </head>
-      <body className={inter.className}>{children}</body>
+      <body>{children}</body>
     </html>
   );
 };

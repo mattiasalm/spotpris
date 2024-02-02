@@ -11,20 +11,17 @@
   "dependencies": {
     "@react-spring/web": "9.7.3",
     "@visx/annotation": "3.3.0",
-    "@visx/react-spring": "3.8.0",
-    "@visx/responsive": "3.3.0",
     "@visx/xychart": "3.8.0",
-    "apexcharts": "3.45.2",
     "classnames": "2.5.1",
     "next": "14.1.0",
-    "nordpool-prices": "../nordpool-prices/nordpool-prices-0.0.4.tgz",
+    "nordpool-prices": "0.0.1",
     "react": "18.2.0",
     "react-apexcharts": "1.4.1",
     "react-dom": "18.2.0"
   },
   "devDependencies": {
-    "@types/node": "20.11.10",
-    "@types/react": "18.2.48",
+    "@types/node": "20.11.16",
+    "@types/react": "18.2.51",
     "@types/react-dom": "18.2.18",
     "autoprefixer": "10.4.17",
     "eslint": "8.56.0",
