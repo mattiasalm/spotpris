@@ -16,8 +16,8 @@ const Button: FC<
   return (
     <button
       className={classNames(
-        'p-2 bg-emerald-200 border-4 text-emerald-700 rounded-md',
-        active ? 'border-emerald-700' : 'border-transparent',
+        'decoration-current decoration-2 underline-offset-4',
+        active ? 'underline' : '',
       )}
       onClick={onClick}
     >
@@ -32,22 +32,25 @@ const GraphArea: FC<GraphAreaProps> = ({ today, tomorrow }) => {
 
   return (
     <>
-      <div className="p-4 grid gap-4 grid-cols-4">
-        <Button active={area === 'SE1'} onClick={() => setArea('SE1')}>
-          SE1
-        </Button>
-        <Button active={area === 'SE2'} onClick={() => setArea('SE2')}>
-          SE2
-        </Button>
-        <Button active={area === 'SE3'} onClick={() => setArea('SE3')}>
-          SE3
-        </Button>
-        <Button active={area === 'SE4'} onClick={() => setArea('SE4')}>
-          SE4
-        </Button>
+      <div className="p-6 grid gap-6">
+        <h1 className="text-2xl">Spotpris Sverige</h1>
+        <div className="flex gap-4">
+          <Button active={area === 'SE1'} onClick={() => setArea('SE1')}>
+            SE1
+          </Button>
+          <Button active={area === 'SE2'} onClick={() => setArea('SE2')}>
+            SE2
+          </Button>
+          <Button active={area === 'SE3'} onClick={() => setArea('SE3')}>
+            SE3
+          </Button>
+          <Button active={area === 'SE4'} onClick={() => setArea('SE4')}>
+            SE4
+          </Button>
+        </div>
       </div>
 
-      <div className="p-4 grid gap-4 grid-cols-4">
+      {/* <div className="p-4 grid gap-4 grid-cols-4">
         <Button active={range === 'today'} onClick={() => setRange('today')}>
           Today
         </Button>
@@ -60,16 +63,17 @@ const GraphArea: FC<GraphAreaProps> = ({ today, tomorrow }) => {
         <Button active={!range} onClick={() => setRange(null)}>
           Both
         </Button>
-      </div>
-      <div className="">
-        <Graph
-          today={
-            range !== 'tomorrow' ? today.find((d) => d.name === area) : null
-          }
-          tomorrow={
-            range !== 'today' ? tomorrow.find((d) => d.name === area) : null
-          }
-        />
+      </div> */}
+      <Graph
+        today={range !== 'tomorrow' ? today.find((d) => d.name === area) : null}
+        tomorrow={
+          range !== 'today' ? tomorrow.find((d) => d.name === area) : null
+        }
+      />
+
+      <div className="px-10 grid grid-cols-2">
+        <div className="text-center">Idag</div>
+        <div className="text-center">Imorgon</div>
       </div>
     </>
   );

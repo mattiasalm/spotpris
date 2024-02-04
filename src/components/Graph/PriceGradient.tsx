@@ -6,7 +6,7 @@ type PriceGradientProps = {
   id: string;
 };
 
-const MID = 80;
+const MID = 70;
 const HIGH = 150;
 const TRANSITION = 20;
 

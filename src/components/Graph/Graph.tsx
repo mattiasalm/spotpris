@@ -1,15 +1,11 @@
 'use client';
 
 import { CircleSubject, Connector } from '@visx/annotation';
-import {
-  Grid,
-  AnimatedLineSeries,
-  Annotation,
-  Axis,
-  XYChart,
-} from '@visx/xychart';
+import { AnimatedLineSeries, Annotation, Axis, XYChart } from '@visx/xychart';
 import React, { FC, useState } from 'react';
 import PriceGradient from './PriceGradient';
+import { Grid, GridColumns } from '@visx/grid';
+import { scaleBand, scaleLinear } from '@visx/scale';
 
 export type GraphData = {
   name: string;
@@ -59,7 +55,7 @@ const Graph: FC<GraphProps> = ({ today, tomorrow }) => {
 
   return (
     <>
-      <div className="flex flex-col items-center justify-center border-b-4 border-[orange] text-[orange]">
+      <div className="flex flex-col items-center justify-center border-b-2 price-info">
         <div className="text-3xl">
           {annotationSubject ? annotationSubject.price : ' '}
           <span className="text-sm"> öre</span>
@@ -71,7 +67,7 @@ const Graph: FC<GraphProps> = ({ today, tomorrow }) => {
 
       <XYChart
         height={400}
-        margin={{ top: 24, right: 24, left: 48, bottom: 48 }}
+        margin={{ top: 40, right: 40, left: 40, bottom: 40 }}
         xScale={{ type: 'band' }}
         yScale={{ type: 'linear' }}
       >
@@ -92,7 +88,13 @@ const Graph: FC<GraphProps> = ({ today, tomorrow }) => {
           </Annotation>
         )} */}
 
-        <Grid numTicks={2} rows={false} stroke="var(--divider-line)" />
+        {/* <GridColumns
+          scale={scaleBand({})}
+          height={300}
+          tickValues={[tomorrow!.data[0][0]]}
+          // rows={false}
+          // stroke="var(--divider-line)"
+        /> */}
 
         <Axis
           hideAxisLine
@@ -107,7 +109,7 @@ const Graph: FC<GraphProps> = ({ today, tomorrow }) => {
               alignmentBaseline="hanging"
               pointerEvents="none"
               fill="var(--axis-ticks)"
-              fontSize={formattedValue === '00' ? 24 : 12}
+              fontSize={formattedValue === '00' ? 16 : 12}
             >
               {formattedValue}
             </text>
@@ -127,10 +129,11 @@ const Graph: FC<GraphProps> = ({ today, tomorrow }) => {
               x={x}
               y={y}
               textAnchor="end"
+              alignmentBaseline="middle"
               pointerEvents="none"
               fill="var(--axis-ticks)"
               stroke="none"
-              fontSize={13}
+              fontSize={16}
             >
               {formattedValue}
             </text>
@@ -142,8 +145,22 @@ const Graph: FC<GraphProps> = ({ today, tomorrow }) => {
             setAnnotationSubject(d.datum as any);
           }}
           dataKey="data"
+          strokeWidth={2}
           data={[
             ...dataPoints,
+            // {
+            //   price: null,
+            //   date: new Date(dataPoints.at(-1)!.date + 24 * 60 * 60 * 1000)
+            //     .setHours(0, 0, 0, 0)
+            //     .valueOf(),
+            // },
+          ]}
+          stroke="url(#line-gradient)"
+          {...accessors}
+        />
+        <AnimatedLineSeries<any, any, PricePoint>
+          dataKey="dataEnd"
+          data={[
             {
               price: null,
               date: new Date(dataPoints.at(-1)!.date + 24 * 60 * 60 * 1000)
@@ -151,7 +168,6 @@ const Graph: FC<GraphProps> = ({ today, tomorrow }) => {
                 .valueOf(),
             },
           ]}
-          stroke="url(#line-gradient)"
           {...accessors}
         />
 
@@ -162,11 +178,15 @@ const Graph: FC<GraphProps> = ({ today, tomorrow }) => {
             dx={0}
             dy={10000}
           >
-            <Connector stroke="var(--annotation-line)" type="line" />
+            <Connector
+              pathProps={{ strokeWidth: 1 }}
+              stroke="var(--annotation-line)"
+              type="line"
+            />
             <CircleSubject
               stroke="var(--annotation-line)"
               fill="var(--annotation-line)"
-              radius={5}
+              radius={6}
             />
           </Annotation>
         )}

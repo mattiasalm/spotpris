@@ -3,27 +3,38 @@
 @tailwind utilities;
 
 :root {
-  --foreground: #1a261a;
-  --background: #91d392;
-  --curve-low-price: green;
-  --curve-mid-price: orange;
-  --curve-high-price: red;
-  --axis-ticks: orange;
-  --annotation-line: orange;
+  --foreground: #89a3b0;
+  --background: #141f25;
+  --curve-low-price: #20ce80;
+  --curve-mid-price: #ce8920;
+  --curve-high-price: #ce4320;
+  --axis-ticks: #89a7b5;
+  --annotation-line: #ca7016;
   --divider-line: purple;
 }
 
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
   :root {
-    --foreground: #91d392;
-    --background: #1a261a;
+    --foreground: #89a3b0;
+    --background: #141f25;
+    --curve-low-price: #20ce80;
+    --curve-mid-price: #ce8920;
+    --curve-high-price: #ce4320;
+    --axis-ticks: #546770;
+    --annotation-line: #ca7016;
+    --divider-line: purple;
   }
-}
+} */
 
 body {
   overscroll-behavior: none;
   color: var(--foreground);
   background: var(--background);
+}
+
+.price-info {
+  border-color: var(--annotation-line);
+  color: var(--annotation-line);
 }
 
 @layer base {
