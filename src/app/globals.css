@@ -5,6 +5,12 @@
 :root {
   --foreground: #1a261a;
   --background: #91d392;
+  --curve-low-price: green;
+  --curve-mid-price: orange;
+  --curve-high-price: red;
+  --axis-ticks: orange;
+  --annotation-line: orange;
+  --divider-line: purple;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -23,5 +29,6 @@ body {
 @layer base {
   body {
     @apply h-screen;
+    touch-action: none;
   }
 }

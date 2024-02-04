@@ -61,7 +61,7 @@ const GraphArea: FC<GraphAreaProps> = ({ today, tomorrow }) => {
           Both
         </Button>
       </div>
-      <div className="h-[600px]">
+      <div className="">
         <Graph
           today={
             range !== 'tomorrow' ? today.find((d) => d.name === area) : null

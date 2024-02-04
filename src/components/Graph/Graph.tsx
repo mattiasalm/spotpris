@@ -1,12 +1,24 @@
 'use client';
 
 import { CircleSubject, Connector } from '@visx/annotation';
-import { AnimatedLineSeries, Annotation, Axis, XYChart } from '@visx/xychart';
+import {
+  Grid,
+  AnimatedLineSeries,
+  Annotation,
+  Axis,
+  XYChart,
+} from '@visx/xychart';
 import React, { FC, useState } from 'react';
+import PriceGradient from './PriceGradient';
 
 export type GraphData = {
   name: string;
   data: [number, number | null][];
+};
+
+type PricePoint = {
+  date: number;
+  price: number | null;
 };
 
 type GraphProps = {
@@ -25,71 +37,137 @@ const getTimeRange = (date: number) => {
 };
 
 const accessors = {
-  xAccessor: (d: any) => d.x,
-  yAccessor: (d: any) => d.y,
+  xAccessor: ({ date }: PricePoint) => date,
+  yAccessor: ({ price }: PricePoint) => price,
 };
 
 const Graph: FC<GraphProps> = ({ today, tomorrow }) => {
-  const dataPoints = [
+  const dataPoints: PricePoint[] = [
     ...(today ? today.data : []),
     ...(tomorrow ? tomorrow.data : []),
-  ].map(([x, y]) => ({ x, y }));
+  ].map(([date, price]) => ({ date, price }));
 
   const nowX = new Date().setMinutes(0, 0, 0).valueOf();
-  const [annotationSubject, setAnnotationSubject] = useState<{
-    x: number;
-    y: number | null;
-  } | null>(dataPoints.find(({ x }) => x === nowX) ?? null);
+  const [annotationSubject, setAnnotationSubject] = useState<PricePoint | null>(
+    dataPoints.find(({ date }) => date === nowX) ?? null,
+  );
+  const prices = [...dataPoints.map(({ price }) => price)].filter(
+    (price) => price !== null,
+  ) as number[];
+  const minPrice = Math.min(...prices);
+  const maxPrice = Math.max(...prices);
 
   return (
     <>
       <div className="flex flex-col items-center justify-center border-b-4 border-[orange] text-[orange]">
         <div className="text-3xl">
-          {annotationSubject ? annotationSubject.y : ' '}
+          {annotationSubject ? annotationSubject.price : ' '}
           <span className="text-sm"> öre</span>
         </div>
-        <div>{annotationSubject ? getTimeRange(annotationSubject.x) : ' '}</div>
+        <div>
+          {annotationSubject ? getTimeRange(annotationSubject.date) : ' '}
+        </div>
       </div>
+
       <XYChart
+        height={400}
+        margin={{ top: 24, right: 24, left: 48, bottom: 48 }}
         xScale={{ type: 'band' }}
         yScale={{ type: 'linear' }}
-        onPointerUp={(d) => {
-          setAnnotationSubject(d.datum as any);
-        }}
-        onPointerMove={(d) => {
-          setAnnotationSubject(d.datum as any);
-        }}
       >
-        <Axis orientation="bottom">
-          {(props) => {
-            console.log(props);
+        <PriceGradient min={minPrice} max={maxPrice} id="line-gradient" />
 
-            return <></>;
+        {/* {tomorrow && today && (
+          <Annotation
+            dataKey="data"
+            datum={{ date: tomorrow.data[0][0], price: tomorrow.data[0][1] }}
+            dx={0}
+            dy={40}
+          >
+            <Connector
+              stroke="var(--divider-line)"
+              type="line"
+              className="translate-y-[20px]"
+            />
+          </Annotation>
+        )} */}
+
+        <Grid numTicks={2} rows={false} stroke="var(--divider-line)" />
+
+        <Axis
+          hideAxisLine
+          hideTicks
+          orientation="bottom"
+          numTicks={100}
+          tickComponent={({ formattedValue, x, y }) => (
+            <text
+              x={x}
+              y={y}
+              textAnchor="middle"
+              alignmentBaseline="hanging"
+              pointerEvents="none"
+              fill="var(--axis-ticks)"
+              fontSize={formattedValue === '00' ? 24 : 12}
+            >
+              {formattedValue}
+            </text>
+          )}
+          tickFormat={(d: number) => {
+            const hour = new Date(d).getHours();
+
+            return hour % 6 ? '' : `0${hour}`.slice(-2);
           }}
-        </Axis>
-        <Axis orientation="left" />
+        />
+        <Axis
+          hideAxisLine
+          hideTicks
+          orientation="left"
+          tickComponent={({ formattedValue, x, y }) => (
+            <text
+              x={x}
+              y={y}
+              textAnchor="end"
+              pointerEvents="none"
+              fill="var(--axis-ticks)"
+              stroke="none"
+              fontSize={13}
+            >
+              {formattedValue}
+            </text>
+          )}
+        />
 
-        <AnimatedLineSeries dataKey="data" data={dataPoints} {...accessors} />
+        <AnimatedLineSeries<any, any, PricePoint>
+          onPointerMove={(d: any): void => {
+            setAnnotationSubject(d.datum as any);
+          }}
+          dataKey="data"
+          data={[
+            ...dataPoints,
+            {
+              price: null,
+              date: new Date(dataPoints.at(-1)!.date + 24 * 60 * 60 * 1000)
+                .setHours(0, 0, 0, 0)
+                .valueOf(),
+            },
+          ]}
+          stroke="url(#line-gradient)"
+          {...accessors}
+        />
 
         {annotationSubject && (
           <Annotation
             dataKey="data"
             datum={annotationSubject}
             dx={0}
-            dy={-1000}
+            dy={10000}
           >
-            <Connector stroke="orange" type="line" />
-            <CircleSubject stroke="orange" />
-            {/* <HtmlLabel
-            showAnchorLine={false}
-            // anchorLineStroke="orange"
-            verticalAnchor="middle"
-          >
-            <div className="p-4 bg-white">
-              <pre>{JSON.stringify(annotationSubject, null, 1)}</pre>
-            </div>
-          </HtmlLabel> */}
-            {/* <AnnotationLabel title="hej" subtitle="hejsan" /> */}
+            <Connector stroke="var(--annotation-line)" type="line" />
+            <CircleSubject
+              stroke="var(--annotation-line)"
+              fill="var(--annotation-line)"
+              radius={5}
+            />
           </Annotation>
         )}
       </XYChart>
